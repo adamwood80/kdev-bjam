@@ -1,0 +1,9 @@
+<!DOCTYPE kpartgui>
+<kpartplugin name="ktexteditor_kde-bjam" library="ktexteditor_kde-bjam" version="2">
+<MenuBar>
+ <Menu name="tools"><Text>&amp;Tools</Text>
+    <separator group="tools_operations" />
+    <Action name="tools_kde-bjam" group="tools_operations"/>
+ </Menu>
+</MenuBar>
+</kpartplugin>
