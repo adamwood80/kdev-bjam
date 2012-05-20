@@ -1,19 +1,37 @@
-project(ktexteditor_kde-bjam)
+project(kdevelop_boostbuild)
 
-find_package(KDE4 REQUIRED)
+set(KDE4_BUILD_TESTS "ON" CACHE "BOOL" "Enable building of tests" FORCE )
+
+find_package(KDE4 4.5.0 REQUIRED)
 include(KDE4Defaults)
-include_directories(${KDE4_INCLUDES} ${QT_INCLUDES})
-add_definitions(${QT_DEFINITIONS} ${KDE4_DEFINITIONS})
+include(MacroLibrary)
+find_package(KDevPlatform 1.3.60 REQUIRED)
 
-set(ktexteditor_kde-bjam_SRCS kde-bjamplugin.cpp)
+if(KDevPlatform_VERSION VERSION_GREATER 1.4.59)
+    MESSAGE(FATAL_ERROR "This version of the plugin doesn't work with KDevPlatform 1.5, version 1.4 is required")
+endif(KDevPlatform_VERSION VERSION_GREATER 1.4.59)
 
-kde4_add_plugin(ktexteditor_kde-bjam ${ktexteditor_kde-bjam_SRCS})
+set(BOOST_BUILD_PLUGIN_VERSION 0.0.1)
 
-target_link_libraries(ktexteditor_kde-bjam ${KDE4_KDEUI_LIBS} ${KDE4_KTEXTEDITOR_LIBS})
+include_directories( ${KDE4_INCLUDES} ${KDEVPLATFORM_INCLUDE_DIR} ${QT_INCLUDES})
 
-install(TARGETS ktexteditor_kde-bjam DESTINATION ${PLUGIN_INSTALL_DIR})
+add_definitions( ${QT_DEFINITIONS} ${KDE4_DEFINITIONS} -DBOOST_BUILD_PLUGIN_VERSION=\\\"${CUSTOM_BUILDSYSTEM_VERSION}\\\" )
 
-install(FILES kde-bjamui.rc DESTINATION ${DATA_INSTALL_DIR}/ktexteditor_kde-bjam)
+set(kdevelop_boostbuild_SRCS boostbuildmanager.cpp)
 
-install(FILES ktexteditor_kde-bjam.desktop DESTINATION ${SERVICES_INSTALL_DIR})
+kde4_add_plugin(kdevelop_boostbuild ${kdevelop_boostbuild_SRCS})
+
+target_link_libraries(kdevelop_boostbuild ${KDE4_KDEUI_LIBS}
+                      ${KDEVPLATFORM_PROJECT_LIBRARIES}
+                      ${KDEVPLATFORM_INTERFACES_LIBRARIES}
+                      ${KDEVPLATFORM_UTIL_LIBRARIES}
+                      ${KDEVPLATFORM_OUTPUTVIEW_LIBRARIES}
+                      ${KDEVPLATFORM_LANGUAGE_LIBRARIES}
+                      )
+
+install(TARGETS kdevelop_boostbuild DESTINATION ${PLUGIN_INSTALL_DIR})
+
+install(FILES kdevelop_boostbuild.rc DESTINATION ${DATA_INSTALL_DIR}/kdevelop_boostbuild)
+
+install(FILES kdevelop_boostbuild.desktop DESTINATION ${SERVICES_INSTALL_DIR})
  
