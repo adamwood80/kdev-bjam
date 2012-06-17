@@ -60,16 +60,16 @@ BoostBuildManager::~BoostBuildManager()
     delete d;
 }
 
-class BoostBuildFolderItem
-    : public KDevelop::ProjectBuildFolderItem
-    //, public DescriptorAttatched, public DefinesAttached, public IncludesAttached
-{
-    public:
-        BoostBuildFolderItem( KDevelop::IProject* project, const KUrl& folder, const QString& build, BoostBuildFolderItem* item)
-        : KDevelop::ProjectBuildFolderItem(project, folder){}
-        // Required, and must be non-inline, for dynamic_cast to work
-        virtual ~BoostBuildFolderItem(){}
-};
+// class BoostBuildFolderItem
+//     : public KDevelop::ProjectBuildFolderItem
+//     //, public DescriptorAttatched, public DefinesAttached, public IncludesAttached
+// {
+//     public:
+//         BoostBuildFolderItem( KDevelop::IProject* project, const KUrl& folder, const QString& build, BoostBuildFolderItem* item)
+//         : KDevelop::ProjectBuildFolderItem(project, folder){}
+//         // Required, and must be non-inline, for dynamic_cast to work
+//         virtual ~BoostBuildFolderItem(){}
+// };
 
 KDevelop::ProjectFolderItem* BoostBuildManager::import ( KDevelop::IProject* project )
 {
@@ -146,6 +146,8 @@ KDevelop::ProjectTargetItem* BoostBuildManager::createTarget ( const QString&, K
 }
 bool BoostBuildManager::addFilesToTarget ( const QList< KDevelop::ProjectFileItem* >& files, KDevelop::ProjectTargetItem* target )
 {
+    Q_UNUSED(files);
+    Q_UNUSED(target);
     return false;
 }
 bool BoostBuildManager::removeTarget ( KDevelop::ProjectTargetItem* )
@@ -154,6 +156,7 @@ bool BoostBuildManager::removeTarget ( KDevelop::ProjectTargetItem* )
 }
 bool BoostBuildManager::removeFilesFromTargets ( const QList< KDevelop::ProjectFileItem* >& files )
 {
+    Q_UNUSED(files);
     return false;
 }
 QList< KDevelop::ProjectTargetItem* > BoostBuildManager::targets ( KDevelop::ProjectFolderItem* folder ) const
@@ -178,7 +181,16 @@ KDevelop::IProjectFileManager::Features BoostBuildManager::features() const
 KDevelop::ProjectFolderItem* BoostBuildManager::createFolderItem( KDevelop::IProject* project, const KUrl& url,
                                                                 KDevelop::ProjectBaseItem* parent )
 {
-    kWarning() << "create FolderItem " << url;
+    if(!parent)
+    {
+        return new KDevelop::ProjectBuildFolderItem(project, url);
+    }
+    KUrl jamfilePath(url);
+    jamfilePath.addPath("Jamfile");
+    
+    if(QFile::exists(jamfilePath.toLocalFile()))
+        return new KDevelop::ProjectBuildFolderItem(project, url, parent);
+    
     return new KDevelop::ProjectFolderItem( project, url, parent );
 }
 
@@ -201,8 +213,8 @@ bool BoostBuildManager::isValid ( const KUrl& url, const bool isFolder, KDevelop
         else if(invalidFolders.contains( name ))
             return false;
         
-    } else if (!isFolder && name.endsWith("~")
-                          || (name.endsWith(".o") || name.endsWith(".a")
+    } else if (!isFolder && (name.endsWith("~")
+                          || name.endsWith(".o") || name.endsWith(".a")
                           || name.startsWith("moc_") || name.endsWith(".moc")
                           || name.endsWith(".so") || name.contains(".so.")
                           || name.startsWith(".swp.")
