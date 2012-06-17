@@ -1,0 +1,18 @@
+[Desktop Entry]
+Type=Service
+Comment=Boost.Build Project Manager
+Icon=gear
+ServiceTypes=KDevelop/Plugin
+X-KDE-Library=kdevboostbuildmanager
+X-KDE-PluginInfo-Author=Adam Wood
+X-KDE-PluginInfo-Email=adamwood@xephi.co.uk
+X-KDE-PluginInfo-Name=KDevBoostBuildManager
+X-KDE-PluginInfo-Category=Project Management
+X-KDE-PluginInfo-License=GPL
+X-KDevelop-Version=14
+X-KDevelop-Interfaces=org.kdevelop.IBuildSystemManager,org.kdevelop.IProjectFileManager
+X-KDevelop-IRequired=org.kdevelop.IGenericProjectManager
+X-KDevelop-Mode=GUI
+X-KDevelop-SupportedMimeTypes=text/x-jamfile
+X-KDevelop-ProjectFilesFilter=Jamroot
+X-KDevelop-ProjectFilesFilterDescription=Jamfiles

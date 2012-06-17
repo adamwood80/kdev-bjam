@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui>
-<kpartplugin name="ktexteditor_kde-bjam" library="ktexteditor_kde-bjam" version="2">
+<kpartplugin name="kdevboostbuildmanager" library="libkdevboostbuildmanager" version="2">
 <MenuBar>
  <Menu name="tools"><Text>&amp;Tools</Text>
     <separator group="tools_operations" />
